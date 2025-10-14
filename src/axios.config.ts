@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 
-const BaseURL = "https://backend.com/";
+const BaseURL = "http://localhost:8000/";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: BaseURL,
@@ -13,9 +13,9 @@ const axiosInstance: AxiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem("token"); // Obtenemos el token de la sesión
+    const token = sessionStorage.getItem("token");
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Añadimos el token en la cabecera
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },

@@ -1,7 +1,14 @@
+import { Role } from "./role.interface";
+
 export interface IUser {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    role: string;
+    email:      string;
+    full_name:  string;
+    id:         string;
+    role_id:    string;
+    created_at: Date;
+    created_by: string;
+    updated_at: Date;
+    updated_by: string;
+    is_deleted: boolean;
+    role:       Role;
 }

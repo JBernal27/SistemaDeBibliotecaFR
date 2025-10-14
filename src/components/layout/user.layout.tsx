@@ -10,18 +10,21 @@ const UserLayout = () => {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
+        alignItems: "center"
       }}
     >
       <Navbar />
       <Box
         component="main"
         sx={{
-          flex: '1 0 auto',
+          flex: 1,
           display: 'flex',
           flexDirection: 'column',
+          maxWidth: "1600px",
+          width: "100%"
         }}
       >
-        <Outlet />
+        <Outlet/>
       </Box>
       <Footer />
     </Box>

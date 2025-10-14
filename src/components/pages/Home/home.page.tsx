@@ -109,7 +109,7 @@ const HomePage = () => {
 
         <Grid container rowSpacing={6} columnSpacing={4} component="section">
           {materials.map((material, index) => (
-            <Grid item xs={12} md={4} key={index}>
+            <Grid size={{ xs: 12, md: 4 }} key={index}>
               <MaterialCard material={material} />
             </Grid>
           ))}
