@@ -1,17 +1,12 @@
-//Se definen los endpoints de la API de usuarios y su estructura
-
 export const USERS_API_ENDPOINTS = (_id: string = "") => {
+  const resource = "/users";
 
-    const resource = "/users";
-    
-    return {
-      GET_ALL : `${resource}`,
-      GET_BY_EMAIL: `${resource}`,
-      GET_BY_ID : `${resource}/${_id}`,
-      UPDATE : `${resource}/${_id}`,
-      REGISTER : `${resource}/register`,
-    };
+  return {
+    GET_ALL: `${resource}`,
+    GET_BY_ID: `${resource}/${_id}`,
+    UPDATE: `${resource}/${_id}`,
+    DELETE: `${resource}`,
   };
-  
-  export type TEndpointKeys = 'GET_ALL' | 'GET_BY_ID' | 'UPDATE' | 'GET_BY_EMAIL' | 'REGISTER'; 
-  
+};
+
+export type TEndpointKeys = "GET_ALL" | "UPDATE" | "GET_BY_ID" | "DELETE";
