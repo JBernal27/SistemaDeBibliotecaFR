@@ -5,7 +5,7 @@ export interface ILoginReq {
     password: string;
 }
 
-export interface ILoginResp extends ILogin {}
+export type ILoginResp = ILogin
 
 export interface IRegisterReq {
     full_name:     string;
@@ -13,4 +13,4 @@ export interface IRegisterReq {
     password: string;
 }
 
-export interface IRegisterResp extends ILogin {}
+export type IRegisterResp = ILogin
