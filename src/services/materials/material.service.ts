@@ -5,24 +5,33 @@ import {
   IMaterialCreate,
   IMaterialUpdate,
 } from "../../models/services/materials-services.interface";
-import { MATERIALS_API_ENDPOINTS, TMaterialEndpointKeys } from "./material.endpoints";
+import {
+  MATERIALS_API_ENDPOINTS,
+  TMaterialEndpointKeys,
+} from "./material.endpoints";
 
-const getEndpoint = (method: TMaterialEndpointKeys, id: string = ""): string => {
+const getEndpoint = (
+  method: TMaterialEndpointKeys,
+  id: string = ""
+): string => {
   return MATERIALS_API_ENDPOINTS(id)[method];
 };
 
 export class MaterialsService {
-
   static getAll = async (params?: {
-    type_id?: string;
-    availability_id?: string;
-    query?: string;
+    type_id?: string | null;
+    loan_status_id?: string | null;
+    availability?: boolean | null;
+    query?: string | null;
   }): Promise<IGetMaterialsResp> => {
     const endpoint = getEndpoint("GET_ALL");
-    const response = await axiosInstance.get<IGetMaterialsResp>(endpoint, { params });
+    console.log("Fetching materials with params:", params);
+    const response = await axiosInstance.get<IGetMaterialsResp>(endpoint, {
+      params,
+    });
     return response.data;
   };
-
+  
   static getById = async (id: string): Promise<IMaterial> => {
     const endpoint = getEndpoint("GET_BY_ID", id);
     const response = await axiosInstance.get<IMaterial>(endpoint);
@@ -41,7 +50,10 @@ export class MaterialsService {
     return response.data;
   };
 
-  static update = async (id: string, data: IMaterialUpdate): Promise<IMaterial> => {
+  static update = async (
+    id: string,
+    data: IMaterialUpdate
+  ): Promise<IMaterial> => {
     const endpoint = getEndpoint("UPDATE", id);
     const response = await axiosInstance.put<IMaterial>(endpoint, data);
     return response.data;
