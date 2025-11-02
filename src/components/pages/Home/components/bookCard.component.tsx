@@ -1,9 +1,9 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { Material } from "../../../../common/interfaces/material.interface";
+import { IMaterial } from "../../../../common/interfaces/material.interface";
 import noImageAvailable from "../../../../assets/images/image-not-found.jpg";
 
 interface MaterialCardProps {
-  material: Material;
+  material: IMaterial;
 }
 
 export default function MaterialCard({ material }: MaterialCardProps) {
@@ -40,7 +40,7 @@ export default function MaterialCard({ material }: MaterialCardProps) {
           }}
         >
           <img
-            src={material.image || noImageAvailable}
+            src={material.img || noImageAvailable}
             alt={material.title}
             style={{
               width: "100%",
@@ -66,7 +66,7 @@ export default function MaterialCard({ material }: MaterialCardProps) {
           >
             {material.title}
           </Typography>
-          <Typography color="text.secondary">{material.autor}</Typography>
+          <Typography color="text.secondary">{material.author.name}</Typography>
           <Box
             sx={{
               position: "absolute",
@@ -79,7 +79,7 @@ export default function MaterialCard({ material }: MaterialCardProps) {
               zIndex: 2,
             }}
           >
-            <Typography color="text.secondary">{material.type}</Typography>
+            <Typography color="text.secondary">{material.material_type.description}</Typography>
           </Box>
         </Box>
       </CardContent>

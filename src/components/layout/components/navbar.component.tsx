@@ -25,7 +25,7 @@ const Navbar = () => {
       setUser(AuthStorage.getUser());
     };
 
-    handleAuthChange(); // Cargar el usuario al montar el componente
+    handleAuthChange();
 
     window.addEventListener("authChange", handleAuthChange);
     return () => window.removeEventListener("authChange", handleAuthChange);
@@ -60,39 +60,52 @@ const Navbar = () => {
           Sistema de Biblioteca
         </Typography>
 
-        <Box>
+        <Box display={"flex"}>
           {user ? (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography
-                variant="subtitle1"
-                sx={{ px: 1, py: 1, fontWeight: "bold", color: "inherit" }}
-              >
-                Hola, {user.full_name}
-              </Typography>
-              <IconButton color="inherit" onClick={handleMenuOpen}>
-                <AccountCircle sx={{fontSize: 40}}/>
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
-                <Divider />
-
-                <MenuItem
-                  onClick={() => {
-                    handleMenuClose();
-                    navigate("/dashboard");
-                  }}
+            <>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography
+                  variant="subtitle1"
+                  sx={{ px: 1, py: 1, fontWeight: "bold", color: "inherit" }}
                 >
-                  <Dashboard fontSize="small" sx={{ mr: 1 }} /> Dashboard
-                </MenuItem>
+                  Hola, {user.full_name}
+                </Typography>
+                <IconButton color="inherit" onClick={handleMenuOpen}>
+                  <AccountCircle sx={{ fontSize: 40 }} />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                >
+                  <Divider />
 
-                <MenuItem onClick={handleLogout}>
-                  <Logout fontSize="small" sx={{ mr: 1 }} /> Cerrar sesión
-                </MenuItem>
-              </Menu>
-            </Box>
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      navigate("/profile");
+                    }}
+                  >
+                    <AccountCircle fontSize="small" sx={{ mr: 1 }} /> Perfil
+                  </MenuItem>
+
+                  {user.role_name === "admin" && (
+                    <MenuItem
+                      onClick={() => {
+                        handleMenuClose();
+                        navigate("/loans");
+                      }}
+                    >
+                      <Dashboard fontSize="small" sx={{ mr: 1 }} /> Panel de Administracion
+                    </MenuItem>
+                  )}
+
+                  <MenuItem onClick={handleLogout}>
+                    <Logout fontSize="small" sx={{ mr: 1 }} /> Cerrar sesión
+                  </MenuItem>
+                </Menu>
+              </Box>
+            </>
           ) : (
             <Button
               variant="contained"

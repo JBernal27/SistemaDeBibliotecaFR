@@ -1,119 +1,127 @@
-import { Container, Typography, Box,  Grid } from '@mui/material';
-import MaterialCard from './components/book-card.component';
-import { Material } from '../../../common/interfaces/material.interface';
-
-const materials: Material[] = [
-  {
-    title: "El Principito",
-    autor: "Antoine de Saint-Exupéry",
-    type: "Libro",
-    image: "https://m.media-amazon.com/images/I/61jGeNH9exL._UF1000,1000_QL80_.jpg",
-  },
-  {
-    title: "Cien años de soledad",
-    autor: "Gabriel García Márquez",
-    type: "Libro",
-    image: "https://images.unsplash.com/photo-1529655683826-aba9b3e77383",
-  },
-  {
-    title: "National Geographic - Edición Especial Océanos",
-    autor: "Varios autores",
-    type: "Revista",
-    image: "https://images.unsplash.com/photo-1519681393784-d120267933ba",
-  },
-  {
-    title: "El Espectador - Domingo Cultural",
-    autor: "Redacción El Espectador",
-    type: "Periódico",
-    image: "https://images.unsplash.com/photo-15244924492112-6e27bf19b6b7",
-  },
-  {
-    title: "Cromos - Especial Moda 2025",
-    autor: "Revista Cromos",
-    type: "Revista",
-    image: "https://images.unsplash.com/photo-1495020689067-958852a7765e",
-  },
-  {
-    title: "La Odisea",
-    autor: "Homero",
-    type: "Libro",
-    image: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4",
-  },
-  {
-    title: "El Tiempo - Economía Hoy",
-    autor: "Redacción El Tiempo",
-    type: "Periódico",
-    image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2",
-  },
-  {
-    title: "Muy Interesante - Ciencia y Tecnología",
-    autor: "Equipo Editorial Muy Interesante",
-    type: "Revista",
-    image: "https://images.unsplash.com/photo-1509021436665-8f07dbf5bf1d",
-  },
-  {
-    title: "Rayuela",
-    autor: "Julio Cortázar",
-    type: "Libro",
-    image: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d",
-  },
-  {
-    title: "Harry Potter y la piedra filosofal",
-    autor: "J.K. Rowling",
-    type: "Libro",
-  },
-];
+import { useEffect, useState } from "react";
+import {
+  Container,
+  Typography,
+  Box,
+  Grid,
+  CircularProgress,
+  Zoom,
+} from "@mui/material";
+import MaterialCard from "./components/bookCard.component";
+import { IMaterial } from "../../../common/interfaces/material.interface";
+import { MaterialsService } from "../../../services/materials/material.service";
+import FilterBar from "./components/filterBar.component";
 
 const HomePage = () => {
+  const [materials, setMaterials] = useState<IMaterial[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [filterData, setFilterData] = useState<{
+    type_id: string | null;
+    availability: boolean | null;
+    query: string | null;
+  }>({
+    type_id: null,
+    availability: null,
+    query: null,
+  });
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    const fetchMaterials = async () => {
+      try {
+        const data = await MaterialsService.getAll(filterData);
+        setMaterials(data);
+      } catch (err) {
+        console.error("Error fetching materials:", err);
+        setError("Error loading materials.");
+      } finally {
+        setLoading(false);
+      }
+      setLoading(false);
+    };
+
+    console.log("Filter Data Changed:", filterData);
+
+    fetchMaterials();
+  }, [filterData]);
+
   return (
     <Container maxWidth="lg">
       <Box
         sx={{
-          minHeight: '100vh',
+          minHeight: "100vh",
           py: 2,
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <Box
           component="header"
           sx={{
-            textAlign: 'center',
-            py: 8
+            textAlign: "center",
+            py: 8,
           }}
         >
           <Typography
             variant="h2"
             component="h1"
             sx={{
-              color: 'primary.main',
-              fontWeight: 'bold'
+              color: "primary.main",
+              fontWeight: "bold",
             }}
           >
             Bienvenido al Sistema de Biblioteca
           </Typography>
-          <Typography
-            variant="subtitle2"
-            color="text.secondary"
-          >
-            Aqui podras ver los libros existentes en nuestra biblioteca libros, revistas y periódicos.
+          <Typography variant="subtitle2" color="text.secondary">
+            Aquí podrás ver los libros existentes en nuestra biblioteca: libros,
+            revistas y periódicos.
           </Typography>
-          <Typography
-            variant="h6"
-            color="text.secondary"
-            mt={3}
-          >
-            Acercate a nuestras instalaciones para realizar el préstamo de los materiales que desees.
+          <Typography variant="h6" color="text.secondary" mt={3}>
+            Acércate a nuestras instalaciones para realizar el préstamo de los
+            materiales que desees.
           </Typography>
         </Box>
 
-        <Grid container rowSpacing={6} columnSpacing={4} component="section">
-          {materials.map((material, index) => (
-            <Grid size={{ xs: 12, md: 4 }} key={index}>
-              <MaterialCard material={material} />
-            </Grid>
-          ))}
-        </Grid>
+        <FilterBar filterData={filterData} setFilterData={setFilterData} />
+
+        {loading ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            flexGrow={1}
+          >
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Typography color="error" textAlign="center">
+            {error}
+          </Typography>
+        ) : (
+          <Grid container rowSpacing={6} columnSpacing={4} component="section">
+            {materials.length === 0 ? (
+              <Typography variant="h3" color="text.secondary" textAlign="center" flexGrow={1}>
+                No se encontraron materiales.
+              </Typography>
+            ) : (
+              materials.map((material, index) => (
+                <Grid size={{ xs: 12, md: 4 }} key={index}>
+                  <Zoom
+                    in={!loading}
+                    style={{ transformOrigin: "0 0 0" }}
+                    timeout={1000}
+                  >
+                    <div>
+                      <MaterialCard material={material} />
+                    </div>
+                  </Zoom>
+                </Grid>
+              ))
+            )}
+          </Grid>
+        )}
       </Box>
     </Container>
   );

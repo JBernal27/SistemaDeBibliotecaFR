@@ -5,6 +5,7 @@ import { Theme } from "./context/theme/theme";
 import { RoutesWithNotFound } from "./components/utilities/routes-with-not-found.utility";
 import { AuthPage } from "./components/pages/auth/auth.page";
 import AuthGuard from "./components/guards/auth.guard";
+import AdminLayout from "./components/layout/admin.layout";
 
 function App() {
   return (
@@ -12,9 +13,18 @@ function App() {
       <BrowserRouter>
         <RoutesWithNotFound>
           <Route element={<UserLayout />}>
-            <Route path="/auth" element={<AuthPage />} />
             <Route path="/" element={<HomePage />} />
-            <Route element={<AuthGuard />}></Route>
+            <Route path="/auth" element={<AuthPage />} />
+          </Route>
+
+          <Route element={<AuthGuard />}>
+            <Route element={<AdminLayout />}>
+              {/* <Route path="/materials" element={<HomePage />} /> */}
+              {/* <Route path="/authors" element={<HomePage />} /> */}
+              {/* <Route path="/users" element={<HomePage />} /> */}
+              {/* <Route path="/loans" element={<HomePage />} /> */}
+              {/* <Route path="/roles" element={<HomePage />} /> */}
+            </Route>
           </Route>
         </RoutesWithNotFound>
       </BrowserRouter>
