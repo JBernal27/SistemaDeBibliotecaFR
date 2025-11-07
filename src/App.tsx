@@ -6,6 +6,7 @@ import { RoutesWithNotFound } from "./components/utilities/routes-with-not-found
 import { AuthPage } from "./components/pages/auth/auth.page";
 import AuthGuard from "./components/guards/auth.guard";
 import AdminLayout from "./components/layout/admin.layout";
+import AuthorsPage from "./components/pages/private/authors/authors.page";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
           <Route element={<AuthGuard />}>
             <Route element={<AdminLayout />}>
               {/* <Route path="/materials" element={<HomePage />} /> */}
-              {/* <Route path="/authors" element={<HomePage />} /> */}
+              <Route path="/authors" element={<AuthorsPage />} />
               {/* <Route path="/users" element={<HomePage />} /> */}
               {/* <Route path="/loans" element={<HomePage />} /> */}
               {/* <Route path="/roles" element={<HomePage />} /> */}
