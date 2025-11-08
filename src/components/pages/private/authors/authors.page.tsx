@@ -20,6 +20,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AlertModal from "../../../utilities/alert-modal.utility";
+import AuthorModal from "./components/author.modal";
 
 export default function AuthorsTable() {
   const [authors, setAuthors] = useState<IAuthor[]>([]);
@@ -32,6 +33,8 @@ export default function AuthorsTable() {
     null 
   );
   const [selectedAuthorId, setSelectedAuthorId] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalAuthor, setModalAuthor] = useState<IAuthor | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,9 +42,11 @@ export default function AuthorsTable() {
       setLoading(true);
       setError(null);
       try {
-        const data = await AuthorsService.getAll();
-        setAuthors(data);
-      } catch (err) {
+          const data = await AuthorsService.getAll();
+          setAuthors(data);
+          // reset isChanged flag after successful refetch
+          setIsChanged(false);
+        } catch (err) {
         console.error("Error fetching authors:", err);
         setError("Error loading authors.");
       } finally {
@@ -59,7 +64,10 @@ export default function AuthorsTable() {
   };
 
   const handleEdit = (authorId: string) => {
-    openConfirm("edit", authorId);
+    // open edit modal for the selected author
+    const found = authors.find((a) => a.id === authorId) ?? null;
+    setModalAuthor(found);
+    setModalOpen(true);
   };
 
   const handleDelete = (authorId: string) => {
@@ -111,7 +119,7 @@ export default function AuthorsTable() {
         <Typography variant="h4" gutterBottom>
           Autores Registrados
         </Typography>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={() => { setModalAuthor(null); setModalOpen(true); }}>
           <Typography variant="body1" color="inherit">
             Agregar Autor
           </Typography>
@@ -223,6 +231,13 @@ export default function AuthorsTable() {
         onClose={handleCancel}
         loading={actionLoading}
         positiveColor={confirmType === "delete" ? "error" : "primary"}
+      />
+
+      <AuthorModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        author={modalAuthor}
+        setIsChanged={setIsChanged}
       />
     </Box>
   );
