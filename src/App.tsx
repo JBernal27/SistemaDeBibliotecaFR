@@ -7,6 +7,7 @@ import { AuthPage } from "./components/pages/auth/auth.page";
 import AuthGuard from "./components/guards/auth.guard";
 import AdminLayout from "./components/layout/admin.layout";
 import AuthorsPage from "./components/pages/private/authors/authors.page";
+import MaterialsTable from "./components/pages/private/materials/materials.page";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
 
           <Route element={<AuthGuard />}>
             <Route element={<AdminLayout />}>
-              {/* <Route path="/materials" element={<HomePage />} /> */}
+              <Route path="/materials" element={<MaterialsTable />} />
               <Route path="/authors" element={<AuthorsPage />} />
               {/* <Route path="/users" element={<HomePage />} /> */}
               {/* <Route path="/loans" element={<HomePage />} /> */}
