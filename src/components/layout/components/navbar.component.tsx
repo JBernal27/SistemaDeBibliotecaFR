@@ -55,23 +55,30 @@ const Navbar = () => {
             flexGrow: 1,
             textDecoration: "none",
             color: "inherit",
+            fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
           }}
         >
           Sistema de Biblioteca
         </Typography>
 
-        <Box display={"flex"}>
+        <Box display={"flex"} alignItems="center">
           {user ? (
             <>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography
                   variant="subtitle1"
-                  sx={{ px: 1, py: 1, fontWeight: "bold", color: "inherit" }}
+                  sx={{
+                    px: 1,
+                    py: 1,
+                    fontWeight: "bold",
+                    color: "inherit",
+                    display: { xs: "none", sm: "block" },
+                  }}
                 >
                   Hola, {user.full_name}
                 </Typography>
                 <IconButton color="inherit" onClick={handleMenuOpen}>
-                  <AccountCircle sx={{ fontSize: 40 }} />
+                  <AccountCircle sx={{ fontSize: { xs: 28, sm: 36, md: 40 } }} />
                 </IconButton>
                 <Menu
                   anchorEl={anchorEl}
@@ -112,8 +119,9 @@ const Navbar = () => {
               component={RouterLink}
               to="/auth"
               endIcon={<Login />}
+              sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
             >
-              Iniciar sesión
+              <span style={{ display: "inline-block" }}>Iniciar sesión</span>
             </Button>
           )}
         </Box>

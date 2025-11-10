@@ -61,7 +61,8 @@ const HomePage = () => {
           component="header"
           sx={{
             textAlign: "center",
-            py: 8,
+            py: { xs: 4, sm: 6, md: 8 },
+            px: { xs: 2, sm: 4 },
           }}
         >
           <Typography
@@ -70,15 +71,26 @@ const HomePage = () => {
             sx={{
               color: "primary.main",
               fontWeight: "bold",
+              fontSize: { xs: "1.6rem", sm: "2.4rem", md: "3rem" },
+              lineHeight: 1.1,
             }}
           >
             Bienvenido al Sistema de Biblioteca
           </Typography>
-          <Typography variant="subtitle2" color="text.secondary">
+          <Typography
+            variant="subtitle2"
+            color="text.secondary"
+            sx={{ fontSize: { xs: "0.85rem", sm: "1rem" }, mt: 1 }}
+          >
             Aquí podrás ver los libros existentes en nuestra biblioteca: libros,
             revistas y periódicos.
           </Typography>
-          <Typography variant="h6" color="text.secondary" mt={3}>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            mt={2}
+            sx={{ fontSize: { xs: "0.9rem", sm: "1rem" } }}
+          >
             Acércate a nuestras instalaciones para realizar el préstamo de los
             materiales que desees.
           </Typography>
@@ -102,12 +114,17 @@ const HomePage = () => {
         ) : (
           <Grid container rowSpacing={6} columnSpacing={4} component="section">
             {materials.length === 0 ? (
-              <Typography variant="h3" color="text.secondary" textAlign="center" flexGrow={1}>
+              <Typography
+                variant="h3"
+                color="text.secondary"
+                textAlign="center"
+                flexGrow={1}
+              >
                 No se encontraron materiales.
               </Typography>
             ) : (
               materials.map((material, index) => (
-                <Grid size={{ xs: 12, md: 4 }} key={index}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                   <Zoom
                     in={!loading}
                     style={{ transformOrigin: "0 0 0" }}

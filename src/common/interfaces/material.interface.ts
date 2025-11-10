@@ -1,4 +1,4 @@
-import { IAuthor } from "./author.interface";
+import { IAuthorMini } from "./author.interface";
 import { IMaterialType } from "./matertialType.interface";
 
 export interface IMaterial {
@@ -12,6 +12,13 @@ export interface IMaterial {
   created_by:    string;
   updated_by:    string;
   updated_at:    Date;
-  author:        IAuthor;
+  author:        IAuthorMini;
   material_type: IMaterialType;
+}
+
+export interface IMaterialMini {
+  id:         string;
+  title:      string;
+  img:        string | null;
+  updated_at: Date;
 }
