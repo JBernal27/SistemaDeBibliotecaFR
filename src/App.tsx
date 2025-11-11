@@ -6,12 +6,9 @@ import { RoutesWithNotFound } from "./components/utilities/routes-with-not-found
 import { AuthPage } from "./components/pages/auth/auth.page";
 import AuthGuard from "./components/guards/auth.guard";
 import AdminLayout from "./components/layout/admin.layout";
-<<<<<<< HEAD
-import LoansPage from "./components/pages/private/loans/loans.page";
-=======
 import AuthorsPage from "./components/pages/private/authors/authors.page";
 import MaterialsTable from "./components/pages/private/materials/materials.page";
->>>>>>> 19bcad5605d7411708049386c673fc4d16e3c21e
+import LoansPage from "./components/pages/private/loans/loans.page";
 
 function App() {
   return (

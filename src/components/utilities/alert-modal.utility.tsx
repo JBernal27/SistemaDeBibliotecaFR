@@ -83,9 +83,4 @@ const AlertModal: React.FC<AlertModalProps> = ({
     </Dialog>
   );
 };
-
-<<<<<<< HEAD
 export default AlertModal;
-=======
-export default AlertModal;
->>>>>>> 19bcad5605d7411708049386c673fc4d16e3c21e
