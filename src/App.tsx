@@ -6,6 +6,7 @@ import { RoutesWithNotFound } from "./components/utilities/routes-with-not-found
 import { AuthPage } from "./components/pages/auth/auth.page";
 import AuthGuard from "./components/guards/auth.guard";
 import AdminLayout from "./components/layout/admin.layout";
+import LoansPage from "./components/pages/private/loans/loans.page";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
               {/* <Route path="/materials" element={<HomePage />} /> */}
               {/* <Route path="/authors" element={<HomePage />} /> */}
               {/* <Route path="/users" element={<HomePage />} /> */}
-              {/* <Route path="/loans" element={<HomePage />} /> */}
+              <Route path="/loans" element={<LoansPage />} />
               {/* <Route path="/roles" element={<HomePage />} /> */}
             </Route>
           </Route>
