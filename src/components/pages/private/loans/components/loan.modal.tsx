@@ -84,7 +84,7 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
     setError(null);
 
     try {
-      // Convertir los datos del formulario a ILoanReq
+      
       const payload: ILoanReq = {
         material_id: formData.material_id.trim(),
         user_id: formData.user_id.trim(),

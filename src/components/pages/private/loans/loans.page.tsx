@@ -14,21 +14,24 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ILoan } from "../../../../common/interfaces/loan.interface"; // ✅ Corregido: ILoan
-import { LoansService } from "../../../../services/loan"; // ✅ Corregido: LoansService
+import { ILoan } from "../../../../common/interfaces/loan.interface";
+import { LoansService } from "../../../../services/loan";
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AlertModal from "../../../utilities/alert-modal.utility";
+import LoanModal from "./components/loan.modal";
 
 export default function LoansTable() {
-  const [loans, setLoans] = useState<ILoan[]>([]); // ✅ Corregido: ILoan
+  const [loans, setLoans] = useState<ILoan[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [actionLoading, setActionLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [isChanged, setIsChanged] = useState<boolean>(false); // ✅ Este está bien
+  const [isChanged, setIsChanged] = useState<boolean>(false);
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
-  const [confirmType, setConfirmType] = useState<"return" | "edit" | null>(null); // ✅ Cambiado a "return"
+  const [confirmType, setConfirmType] = useState<"return" | null>(null);
   const [selectedLoanId, setSelectedLoanId] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalLoan, setModalLoan] = useState<ILoan | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,7 +39,7 @@ export default function LoansTable() {
       setLoading(true);
       setError(null);
       try {
-        const data = await LoansService.getAll(); // ✅ Corregido: LoansService
+        const data = await LoansService.getAll();
         setLoans(data);
       } catch (err) {
         console.error("Error fetching loans:", err);
@@ -49,16 +52,19 @@ export default function LoansTable() {
     fetchLoans();
   }, [isChanged]);
 
-  const openConfirm = (type: "return" | "edit", loanId: string) => {
+  const openConfirm = (type: "return", loanId: string) => {
     setConfirmType(type);
     setSelectedLoanId(loanId);
     setConfirmOpen(true);
   };
 
-  const handleEdit = (loanId: string) => {
-    openConfirm("edit", loanId);
+  // Edit opens modal with the full loan object
+  const handleEdit = (loan: ILoan) => {
+    setModalLoan(loan);
+    setModalOpen(true);
   };
 
+  // Return opens confirmation modal (AlertModal)
   const handleReturn = (loanId: string) => {
     openConfirm("return", loanId);
   };
@@ -69,17 +75,10 @@ export default function LoansTable() {
       return;
     }
 
-    if (confirmType === "edit") {
-      setConfirmOpen(false);
-      navigate(`/loans/${selectedLoanId}/edit`);
-      return;
-    }
-
-    // ✅ Para devolver préstamo (usando returnLoan que SÍ existe)
     setActionLoading(true);
     try {
-      await LoansService.returnLoan(selectedLoanId); // ✅ Usamos el método que existe
-      setIsChanged(prev => !prev); // ✅ Esto refrescará los datos
+      await LoansService.returnLoan(selectedLoanId);
+      setIsChanged((prev) => !prev);
     } catch (err) {
       console.error("Error returning loan:", err);
       setError("Error al devolver el préstamo.");
@@ -100,20 +99,24 @@ export default function LoansTable() {
 
   return (
     <Box>
+      <LoanModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        loan={modalLoan}
+        setIsChanged={setIsChanged}
+      />
       {/* Header */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={3}
-      >
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4" gutterBottom>
           Préstamos Registrados
         </Typography>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={() => navigate("/loans/create")}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setModalLoan(null);
+            setModalOpen(true);
+          }}
           startIcon={<AddCircleOutlineIcon />}
         >
           <Typography variant="body1" color="inherit">
@@ -170,34 +173,19 @@ export default function LoansTable() {
                 >
                   <TableCell>{loan.user?.name ?? "—"}</TableCell>
                   <TableCell>{loan.material?.title ?? "—"}</TableCell>
+                  <TableCell>{loan.loan_date ? new Date(loan.loan_date).toLocaleDateString() : "—"}</TableCell>
                   <TableCell>
-                    {loan.loan_date
-                      ? new Date(loan.loan_date).toLocaleDateString()
-                      : "—"}
+                    {loan.expected_return_date ? new Date(loan.expected_return_date).toLocaleDateString() : "—"}
                   </TableCell>
                   <TableCell>
-                    {loan.expected_return_date
-                      ? new Date(loan.expected_return_date).toLocaleDateString()
-                      : "—"}
-                  </TableCell>
-                  <TableCell>
-                    {loan.actual_return_date
-                      ? new Date(loan.actual_return_date).toLocaleDateString()
-                      : "—"}
+                    {loan.actual_return_date ? new Date(loan.actual_return_date).toLocaleDateString() : "—"}
                   </TableCell>
                   <TableCell>{loan.status?.name ?? loan.status_id ?? "—"}</TableCell>
                   <TableCell align="center">
-                    <IconButton
-                      color="warning"
-                      onClick={() => handleEdit(loan.id)}
-                    >
+                    <IconButton color="warning" onClick={() => handleEdit(loan)}>
                       <EditIcon sx={{ fontSize: "25px" }} color="inherit" />
                     </IconButton>
-                    <IconButton
-                      color="success"
-                      onClick={() => handleReturn(loan.id)}
-                      disabled={!!loan.actual_return_date} // ✅ Deshabilitar si ya fue devuelto
-                    >
+                    <IconButton color="success" onClick={() => handleReturn(loan.id)} disabled={!!loan.actual_return_date}>
                       <Typography variant="body2">Devolver</Typography>
                     </IconButton>
                   </TableCell>
@@ -211,18 +199,14 @@ export default function LoansTable() {
       {/* Confirmación */}
       <AlertModal
         open={confirmOpen}
-        title={confirmType === "return" ? "Devolver préstamo" : "Editar préstamo"}
-        message={
-          confirmType === "return"
-            ? "¿Estás seguro de que deseas marcar este préstamo como devuelto?"
-            : "¿Deseas editar los datos de este préstamo?"
-        }
-        positiveText={confirmType === "return" ? "Devolver" : "Editar"}
+        title={"Devolver préstamo"}
+        message={"¿Estás seguro de que deseas marcar este préstamo como devuelto?"}
+        positiveText={"Devolver"}
         negativeText="Cancelar"
         onConfirm={handleConfirm}
         onClose={handleCancel}
         loading={actionLoading}
-        positiveColor={confirmType === "return" ? "success" : "primary"}
+        positiveColor={"success"}
       />
     </Box>
   );
