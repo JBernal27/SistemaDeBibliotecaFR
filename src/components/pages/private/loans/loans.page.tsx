@@ -33,7 +33,7 @@ export default function LoansTable() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalLoan, setModalLoan] = useState<ILoan | null>(null);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const fetchLoans = async () => {
       setLoading(true);

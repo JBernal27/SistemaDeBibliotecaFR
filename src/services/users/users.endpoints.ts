@@ -1,12 +1,19 @@
-export const USERS_API_ENDPOINTS = (_id: string = "") => {
+export const USERS_API_ENDPOINTS = (id: string = "") => {
   const resource = "/users";
 
   return {
-    GET_ALL: `${resource}`,
-    GET_BY_ID: `${resource}/${_id}`,
-    UPDATE: `${resource}/${_id}`,
-    DELETE: `${resource}`,
+    GET_ALL: resource,
+    GET_BY_ID: `${resource}/${id}`,
+    CREATE: resource,
+    UPDATE: `${resource}/${id}`,
+    DELETE: `${resource}/${id}`,
   };
 };
 
-export type TEndpointKeys = "GET_ALL" | "UPDATE" | "GET_BY_ID" | "DELETE";
+export type TUserEndpointKeys =
+  | "GET_ALL"
+  | "GET_BY_ID"
+  | "CREATE"
+  | "UPDATE"
+  | "DELETE";
+
