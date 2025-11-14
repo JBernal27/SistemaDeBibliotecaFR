@@ -41,7 +41,27 @@ interface LoanFormData {
   status_id: string;
 }
 
-const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged }) => {
+// ---- Diccionario estados español ----
+const statusDictionary: Record<string, string> = {
+  pending: "Pendiente",
+  borrowed: "Prestado",
+  returned: "Devuelto",
+  overdue: "Vencido",
+};
+
+const translateStatus = (status: string): string => {
+  const spanish = statusDictionary[status.toLowerCase()];
+  return spanish
+    ? spanish.charAt(0).toUpperCase() + spanish.slice(1)
+    : status.charAt(0).toUpperCase() + status.slice(1);
+};
+
+const LoanModal: React.FC<LoanModalProps> = ({
+  open,
+  onClose,
+  loan,
+  setIsChanged,
+}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,7 +80,7 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
     },
   });
 
-  // ---- Cargar opciones (usuarios, materiales, estados) ----
+  // ---- Cargar opciones ----
   useEffect(() => {
     if (open) {
       const loadOptions = async () => {
@@ -75,6 +95,9 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
           setMaterials(materialsResp);
           setUsers(usersResp);
           setStatuses(statusResp);
+
+          // DEBUG: ver cómo vienen los usuarios (quita luego)
+          console.log("Users loaded (LoanModal):", usersResp);
         } catch (e) {
           console.error(e);
           setError("Error al cargar las opciones del formulario.");
@@ -133,7 +156,6 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
       };
 
       if (loan) {
-        // Aquí puedes agregar update si después lo agregan al backend
         await LoansService.returnLoan(loan.id);
       } else {
         await LoansService.create(payload);
@@ -160,17 +182,24 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
           </div>
         ) : (
           <form id="loan-form" onSubmit={handleSubmit(onSubmit)}>
-            
+
             {/* Select Material */}
             <Controller
               name="material_id"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <TextField select label="Material" fullWidth required {...field} sx={{ mt: 2 }}>
+                <TextField
+                  select
+                  label="Material"
+                  fullWidth
+                  required
+                  {...field}
+                  sx={{ mt: 2 }}
+                >
                   {materials.map((m) => (
                     <MenuItem key={m.id} value={m.id}>
-                      {m.name || `Material ${m.id}`}
+                      {m.title || m.name || `Material ${m.id}`}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -183,12 +212,34 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <TextField select label="Usuario" fullWidth required {...field} sx={{ mt: 2 }}>
-                  {users.map((u) => (
-                    <MenuItem key={u.id} value={u.id}>
-                      {u.name} ({u.email})
-                    </MenuItem>
-                  ))}
+                <TextField
+                  select
+                  label="Usuario"
+                  fullWidth
+                  required
+                  {...field}
+                  sx={{ mt: 2 }}
+                  SelectProps={{
+                    MenuProps: {
+                      PaperProps: {
+                        style: { maxHeight: 250 },
+                      },
+                    },
+                  }}
+                >
+                  {users.map((u) => {
+                    // fallback seguro: full_name -> name -> email -> 'Usuario <id>'
+                    const label =
+                      (u.full_name && String(u.full_name).trim()) ||
+                      (u.name && String(u.name).trim()) ||
+                      (u.email && String(u.email).trim()) ||
+                      `Usuario ${u.id}`;
+                    return (
+                      <MenuItem key={u.id} value={u.id}>
+                        {label}
+                      </MenuItem>
+                    );
+                  })}
                 </TextField>
               )}
             />
@@ -233,10 +284,17 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <TextField select label="Estado del préstamo" fullWidth required {...field} sx={{ mt: 2 }}>
+                <TextField
+                  select
+                  label="Estado del préstamo"
+                  fullWidth
+                  required
+                  {...field}
+                  sx={{ mt: 2 }}
+                >
                   {statuses.map((s) => (
                     <MenuItem key={s.id} value={s.id}>
-                      {s.name}
+                      {translateStatus(s.name)}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -244,7 +302,9 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
             />
 
             {error && (
-              <div style={{ color: "#d32f2f", fontSize: 14, marginTop: 8 }}>{error}</div>
+              <div style={{ color: "#d32f2f", fontSize: 14, marginTop: 8 }}>
+                {error}
+              </div>
             )}
           </form>
         )}
@@ -254,7 +314,12 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
         <Button onClick={() => (loading ? undefined : onClose())} disabled={loading}>
           Cancelar
         </Button>
-        <Button type="submit" form="loan-form" variant="contained" disabled={loading || loadingOptions}>
+        <Button
+          type="submit"
+          form="loan-form"
+          variant="contained"
+          disabled={loading || loadingOptions}
+        >
           {loading ? <CircularProgress size={20} color="inherit" /> : loan ? "Guardar" : "Crear"}
         </Button>
       </DialogActions>
