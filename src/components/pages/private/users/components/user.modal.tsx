@@ -7,11 +7,17 @@ import {
   Button,
   TextField,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { IUser } from "../../../../../common/interfaces/user.interface";
 import { UsersService } from "../../../../../services/users";
 import { IUserCreate, IUserUpdate } from "../../../../../models/services/users-services.interface";
+import { RolesService } from "../../../../../services/roles";
+import { IRole } from "../../../../../common/interfaces/role.interface";
 
 interface UserModalProps {
   open: boolean;
@@ -23,6 +29,7 @@ interface UserModalProps {
 const UserModal: React.FC<UserModalProps> = ({ open, onClose, user, setIsChanged }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [roles, setRoles] = useState<IRole[]>([]);
 
   const { control, handleSubmit, reset } = useForm<IUserCreate>({
     defaultValues: {
@@ -32,6 +39,21 @@ const UserModal: React.FC<UserModalProps> = ({ open, onClose, user, setIsChanged
     },
   });
 
+  // 🔹 Cargar roles desde el backend
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const data = await RolesService.getAll();
+        setRoles(data);
+      } catch (err) {
+        console.error("Error al cargar roles:", err);
+      }
+    };
+
+    fetchRoles();
+  }, []);
+
+  // 🔹 Resetear formulario al abrir/cerrar el modal
   useEffect(() => {
     if (open) {
       if (user) {
@@ -60,6 +82,10 @@ const UserModal: React.FC<UserModalProps> = ({ open, onClose, user, setIsChanged
       setError("El email es obligatorio.");
       return;
     }
+    if (!data.role_id) {
+      setError("Debes seleccionar un rol.");
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -67,7 +93,7 @@ const UserModal: React.FC<UserModalProps> = ({ open, onClose, user, setIsChanged
     const payload: IUserCreate = {
       name: data.name.trim(),
       email: data.email.trim(),
-      role_id: data.role_id ?? "",
+      role_id: data.role_id,
     };
 
     try {
@@ -110,11 +136,31 @@ const UserModal: React.FC<UserModalProps> = ({ open, onClose, user, setIsChanged
             )}
           />
 
+          {/* 🔹 Campo de selección de rol */}
           <Controller
             name="role_id"
             control={control}
             render={({ field }) => (
-              <TextField label="Rol ID" fullWidth {...field} sx={{ mt: 2 }} />
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <InputLabel id="role-select-label">Rol</InputLabel>
+                <Select
+                  {...field}
+                  labelId="role-select-label"
+                  label="Rol"
+                  value={field.value || ""}
+                  onChange={(e) => field.onChange(e.target.value)}
+                >
+                  {roles.length === 0 ? (
+                    <MenuItem disabled>Cargando roles...</MenuItem>
+                  ) : (
+                    roles.map((role) => (
+                      <MenuItem key={role.id} value={role.id}>
+                        {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
+                      </MenuItem>
+                    ))
+                  )}
+                </Select>
+              </FormControl>
             )}
           />
 
