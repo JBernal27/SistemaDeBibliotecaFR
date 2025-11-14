@@ -83,5 +83,4 @@ const AlertModal: React.FC<AlertModalProps> = ({
     </Dialog>
   );
 };
-
 export default AlertModal;

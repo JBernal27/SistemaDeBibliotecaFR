@@ -100,7 +100,7 @@ const Navbar = () => {
                     <MenuItem
                       onClick={() => {
                         handleMenuClose();
-                        navigate("/loans");
+                        navigate("/dashboard");
                       }}
                     >
                       <Dashboard fontSize="small" sx={{ mr: 1 }} /> Panel de Administracion

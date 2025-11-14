@@ -8,6 +8,9 @@ import AuthGuard from "./components/guards/auth.guard";
 import AdminLayout from "./components/layout/admin.layout";
 import AuthorsPage from "./components/pages/private/authors/authors.page";
 import MaterialsTable from "./components/pages/private/materials/materials.page";
+import LoansPage from "./components/pages/private/loans/loans.page";
+import Userspage from "./components/pages/private/users/users.page";
+import DashboardPage from "./components/pages/private/dashboard/dashboard.page";
 
 function App() {
   return (
@@ -23,9 +26,9 @@ function App() {
             <Route element={<AdminLayout />}>
               <Route path="/materials" element={<MaterialsTable />} />
               <Route path="/authors" element={<AuthorsPage />} />
-              {/* <Route path="/users" element={<HomePage />} /> */}
-              {/* <Route path="/loans" element={<HomePage />} /> */}
-              {/* <Route path="/roles" element={<HomePage />} /> */}
+              <Route path="/users" element={<Userspage />} />
+              <Route path="/loans" element={<LoansPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
             </Route>
           </Route>
         </RoutesWithNotFound>

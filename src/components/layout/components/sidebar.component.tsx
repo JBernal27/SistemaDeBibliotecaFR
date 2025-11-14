@@ -40,6 +40,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: "home", label: "Inicio", icon: <HomeIcon />, path: "/" },
+  { id: "dashboard", label: "Dashboard", icon: <SecurityIcon />, path: "/dashboard" },
   {
     id: "materials",
     label: "Materiales",
@@ -49,7 +50,6 @@ const navItems: NavItem[] = [
   { id: "authors", label: "Autores", icon: <PersonIcon />, path: "/authors" },
   { id: "users", label: "Usuarios", icon: <PeopleIcon />, path: "/users" },
   { id: "loans", label: "Préstamos", icon: <AssignmentIcon />, path: "/loans" },
-  { id: "roles", label: "Roles", icon: <SecurityIcon />, path: "/roles" },
 ];
 
 export default function SidebarLayout() {
@@ -224,7 +224,7 @@ export default function SidebarLayout() {
         }}
       >
         <Toolbar />
-        <Box component={"main"} sx={{ width: "100%", mx: "auto" }}>
+        <Box component={"main"} sx={{ width: {lg: "70%", sm: "90%"}, mx: "auto" }}>
           <Outlet />
         </Box>
       </Box>
