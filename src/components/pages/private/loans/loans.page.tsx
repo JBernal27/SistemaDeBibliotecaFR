@@ -13,7 +13,6 @@ import {
   Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ILoan } from "../../../../common/interfaces/loan.interface";
 import { LoansService } from "../../../../services/loan";
 import EditIcon from "@mui/icons-material/Edit";
@@ -32,7 +31,6 @@ export default function LoansTable() {
   const [selectedLoanId, setSelectedLoanId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalLoan, setModalLoan] = useState<ILoan | null>(null);
-  const navigate = useNavigate();
   
   useEffect(() => {
     const fetchLoans = async () => {

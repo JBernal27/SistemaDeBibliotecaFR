@@ -18,6 +18,9 @@ import { ILoanReq } from "../../../../../models/services/loans-services.interfac
 import { UsersService } from "../../../../../services/users";
 import { MaterialsService } from "../../../../../services/materials/material.service";
 import { LoanStatusService } from "../../../../../services/loan_status/loanStatus.service";
+import { IMaterial } from "../../../../../common/interfaces/material.interface";
+import { IUser } from "../../../../../common/interfaces/user.interface";
+import { ILoanStatus } from "../../../../../common/interfaces/loanStatus.interface";
 
 interface LoanModalProps {
   open: boolean;
@@ -45,9 +48,9 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [materials, setMaterials] = useState<any[]>([]);
-  const [users, setUsers] = useState<any[]>([]);
-  const [statuses, setStatuses] = useState<any[]>([]);
+  const [materials, setMaterials] = useState<IMaterial[]>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [statuses, setStatuses] = useState<ILoanStatus[]>([]);
   const [loadingOptions, setLoadingOptions] = useState<boolean>(true);
 
   const { control, handleSubmit, reset } = useForm<LoanFormData>({
@@ -149,6 +152,22 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
     }
   };
 
+  const translateStatus = (name: string) => {
+    switch (name) {
+      case "pending":
+        return "Pendiente";
+      case "borrowed":
+        return "Prestado";
+      case "returned":
+        return "Devuelto";
+      case "overdue":
+        return "Atrasado";
+      default:
+        // Capitalize first letter as fallback
+        return name ? name.charAt(0).toUpperCase() + name.slice(1) : name;
+    }
+  };
+
   return (
     <Dialog open={open} onClose={() => (loading ? undefined : onClose())} fullWidth maxWidth="sm">
       <DialogTitle>{loan ? "Editar préstamo" : "Crear préstamo"}</DialogTitle>
@@ -170,7 +189,7 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
                 <TextField select label="Material" fullWidth required {...field} sx={{ mt: 2 }}>
                   {materials.map((m) => (
                     <MenuItem key={m.id} value={m.id}>
-                      {m.name || `Material ${m.id}`}
+                      {m.title}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -186,7 +205,7 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
                 <TextField select label="Usuario" fullWidth required {...field} sx={{ mt: 2 }}>
                   {users.map((u) => (
                     <MenuItem key={u.id} value={u.id}>
-                      {u.name} ({u.email})
+                      {u.full_name} ({u.email})
                     </MenuItem>
                   ))}
                 </TextField>
@@ -236,7 +255,7 @@ const LoanModal: React.FC<LoanModalProps> = ({ open, onClose, loan, setIsChanged
                 <TextField select label="Estado del préstamo" fullWidth required {...field} sx={{ mt: 2 }}>
                   {statuses.map((s) => (
                     <MenuItem key={s.id} value={s.id}>
-                      {s.name}
+                      {translateStatus(s.name)}
                     </MenuItem>
                   ))}
                 </TextField>
