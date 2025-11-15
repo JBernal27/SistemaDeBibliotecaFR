@@ -11,6 +11,7 @@ import MaterialsTable from "./components/pages/private/materials/materials.page"
 import LoansPage from "./components/pages/private/loans/loans.page";
 import Userspage from "./components/pages/private/users/users.page";
 import DashboardPage from "./components/pages/private/dashboard/dashboard.page";
+import ProfilePage from "./components/pages/private/profile/profile.page";
 
 function App() {
   return (
@@ -20,6 +21,10 @@ function App() {
           <Route element={<UserLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/auth" element={<AuthPage />} />
+
+            <Route element={<AuthGuard />}>
+              <Route path="/profile" element={<ProfilePage />} />
+            </Route>
           </Route>
 
           <Route element={<AuthGuard />}>
