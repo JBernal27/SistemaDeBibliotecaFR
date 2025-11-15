@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
-import { axiosInstance } from "../../../../../axios.config";
-
-type LoanPoint = { date: string; count: number };
+import axios from "axios";
+import GraphicsService, {
+  LoanPoint,
+} from "../../../../../services/graphics/graphics.service";
 
 export default function GetLoansByDateGraphic() {
   const [data, setData] = useState<LoanPoint[]>([]);
@@ -16,19 +17,27 @@ export default function GetLoansByDateGraphic() {
       setLoading(true);
       setError(null);
       try {
-        const resp = await axiosInstance.get<LoanPoint[]>("/graphics/loans-by-date");
+        const resp = await GraphicsService.getLoansByDate();
 
         if (!mounted) return;
-        const sorted = resp.data
+        const sorted = resp
           .slice()
           .sort(
             (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
           );
         setData(sorted);
-      } catch (e: any) {
-        setError(
-          e?.response?.data?.detail ?? e.message ?? "Error al cargar datos"
-        );
+      } catch (e: unknown) {
+        if (axios.isAxiosError(e)) {
+          setError(e.response?.data?.detail ?? "Error al cargar datos");
+          return;
+        }
+
+        if (e instanceof Error) {
+          setError(e.message);
+          return;
+        }
+
+        setError("Error al cargar datos");
       } finally {
         if (mounted) setLoading(false);
       }
@@ -75,20 +84,33 @@ export default function GetLoansByDateGraphic() {
       justifyContent="center"
       alignItems="center"
       width="100%"
+      flexDirection="column"
+      gap={2}
     >
-      <LineChart
-        xAxis={[{ scaleType: 'point', data: xLabels }]}
-        series={[
-            { 
-                data: seriesData, 
-                area: true,
-                label: 'Préstamos',
-            }
-        ]}
-        height={300}
-        width={Math.min(900, Math.max(300, xLabels.length * 60))}
-        sx={{ maxWidth: "100%" }}
-      />
+      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+        Préstamos por fecha
+      </Typography>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        sx={{ overflowX: "auto" }}
+      >
+        <LineChart
+          xAxis={[{ scaleType: "band", data: xLabels }]}
+          series={[
+            {
+              data: seriesData,
+              area: true,
+              label: "Préstamos",
+            },
+          ]}
+          height={300}
+          // width={Math.min(900, Math.max(300, xLabels.length * 60))}
+          sx={{ maxWidth: "100%" }}
+        />
+      </Box>
     </Box>
   );
 }

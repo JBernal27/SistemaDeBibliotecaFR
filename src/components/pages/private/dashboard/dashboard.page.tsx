@@ -7,20 +7,37 @@ import GetLoansTypesBorrowedGraphic from "./components/get-loans-types-borrowed.
 const DashboardPage = () => {
   return (
     <Box
-      display={"flex"}
+      display="flex"
       justifyContent="center"
       alignItems="flex-start"
-      gap={4}
+      gap={3}
       flexWrap="wrap"
-      p={4}
+      p={2}
+      sx={{
+        "@media (max-width: 1300px)": {
+          gap: 2,
+          p: 1.5,
+        },
+        "@media (max-width: 1200px)": {
+          gap: 2,
+          p: 1,
+        },
+      }}
     >
       <Box
         sx={{
           p: 2,
-          maxWidth: "45%",
+          minWidth: "100%",
+          "@media (min-width: 1448px)": {
+            minWidth: "calc(50% - 12px)",
+            maxWidth: "calc(50% - 12px)",
+          },
           display: "flex",
           flexDirection: "column",
           gap: 2,
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          minHeight: "30vh",
+          borderRadius: 1,
         }}
       >
         <GetLoansByDateGraphic />
@@ -28,10 +45,17 @@ const DashboardPage = () => {
       <Box
         sx={{
           p: 2,
-          maxWidth: "45%",
+          minWidth: "100%",
+          "@media (min-width: 1448px)": {
+            minWidth: "calc(50% - 12px)",
+            maxWidth: "calc(50% - 12px)",
+          },
           display: "flex",
           flexDirection: "column",
           gap: 2,
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          minHeight: "30vh",
+          borderRadius: 1,
         }}
       >
         <GetLoansTypesBorrowedGraphic />
@@ -39,10 +63,17 @@ const DashboardPage = () => {
       <Box
         sx={{
           p: 2,
-          maxWidth: "45%",
+          minWidth: "100%",
+          "@media (min-width: 1448px)": {
+            minWidth: "calc(50% - 12px)",
+            maxWidth: "calc(50% - 12px)",
+          },
           display: "flex",
           flexDirection: "column",
           gap: 2,
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          minHeight: "30vh",
+          borderRadius: 1,
         }}
       >
         <RolesTable />
@@ -50,10 +81,17 @@ const DashboardPage = () => {
       <Box
         sx={{
           p: 2,
-          maxWidth: "45%",
+          minWidth: "100%",
+          "@media (min-width: 1448px)": {
+            minWidth: "calc(50% - 12px)",
+            maxWidth: "calc(50% - 12px)",
+          },
           display: "flex",
           flexDirection: "column",
           gap: 2,
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          minHeight: "30vh",
+          borderRadius: 1,
         }}
       >
         <MaterialTypeTable />

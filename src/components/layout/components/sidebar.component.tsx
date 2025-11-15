@@ -224,7 +224,7 @@ export default function SidebarLayout() {
         }}
       >
         <Toolbar />
-        <Box component={"main"} sx={{ width: {lg: "70%", sm: "90%"}, mx: "auto" }}>
+        <Box component={"main"} sx={{ width: { xlg: "70%", lg: "90%", sm: "90%" }, mx: "auto" }}>
           <Outlet />
         </Box>
       </Box>
