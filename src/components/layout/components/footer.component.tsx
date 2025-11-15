@@ -5,6 +5,7 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
+        zIndex: 1300,
         py: 3,
         px: 2,
         mt: 'auto',

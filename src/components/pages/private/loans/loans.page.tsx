@@ -169,7 +169,7 @@ export default function LoansTable() {
                     "&:hover": { backgroundColor: "action.hover" },
                   }}
                 >
-                  <TableCell>{loan.user?.name ?? "—"}</TableCell>
+                  <TableCell>{loan.user?.full_name ?? "—"}</TableCell>
                   <TableCell>{loan.material?.title ?? "—"}</TableCell>
                   <TableCell>{loan.loan_date ? new Date(loan.loan_date).toLocaleDateString() : "—"}</TableCell>
                   <TableCell>
