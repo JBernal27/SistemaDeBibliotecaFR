@@ -18,10 +18,10 @@ import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import VisibilityIcon from "@mui/icons-material/Visibility";  // 👁 NUEVO
+import VisibilityIcon from "@mui/icons-material/Visibility";  
 import AlertModal from "../../../utilities/alert-modal.utility";
 import MaterialModal from "./components/material.modal";
-import MaterialView from "./components/material.view";        // 👁 NUEVO
+import MaterialView from "../../../../common/components/material.view";        
 import { MaterialsService } from "../../../../services/materials/material.service";
 import noImageAvailable from "../../../../assets/images/image-not-found.jpg";
 
@@ -34,11 +34,8 @@ export default function MaterialsTable() {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmType, setConfirmType] = useState<"delete" | "edit" | null>(null);
   const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null);
-
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalMaterial, setModalMaterial] = useState<IMaterial | null>(null);
-
-  // 👁 NUEVO → para modal de visualización
   const [viewOpen, setViewOpen] = useState<boolean>(false);
   const [viewMaterial, setViewMaterial] = useState<IMaterial | null>(null);
 
@@ -77,7 +74,7 @@ export default function MaterialsTable() {
 
   const handleDelete = (materialId: string) => openConfirm("delete", materialId);
 
-  // 👁 NUEVO
+  
   const handleView = (material: IMaterial) => {
     setViewMaterial(material);
     setViewOpen(true);

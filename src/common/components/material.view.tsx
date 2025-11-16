@@ -7,8 +7,8 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import { IMaterial } from "../../../../../common/interfaces/material.interface";
-import noImageAvailable from "../../../../../assets/images/image-not-found.jpg";
+import { IMaterial } from "../interfaces/material.interface";
+import noImageAvailable from "../../assets/images/image-not-found.jpg";
 
 interface Props {
   open: boolean;

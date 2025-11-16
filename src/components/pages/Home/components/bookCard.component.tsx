@@ -1,12 +1,15 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { IMaterial } from "../../../../common/interfaces/material.interface";
 import noImageAvailable from "../../../../assets/images/image-not-found.jpg";
+import { Dispatch, SetStateAction } from "react";
 
 interface MaterialCardProps {
   material: IMaterial;
+  setViewOpen: Dispatch<SetStateAction<boolean>>
+  setViewMaterial: Dispatch<SetStateAction<IMaterial | null>>
 }
 
-export default function MaterialCard({ material }: MaterialCardProps) {
+export default function MaterialCard({ material, setViewOpen, setViewMaterial }: MaterialCardProps) {
   return (
     <Card
       sx={{
@@ -17,8 +20,13 @@ export default function MaterialCard({ material }: MaterialCardProps) {
           boxShadow: 3,
         },
         position: "relative",
+        cursor: "pointer",
       }}
       elevation={1}
+      onClick={() => {
+        setViewMaterial(material);
+        setViewOpen(true);
+      }}
     >
       <CardContent
         sx={{
