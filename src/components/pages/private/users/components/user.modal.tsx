@@ -44,6 +44,7 @@ const UserModal: React.FC<UserModalProps> = ({ open, onClose, user, setIsChanged
     const fetchRoles = async () => {
       try {
         const data = await RolesService.getAll();
+        data.map((role => role.name = role.name.charAt(0).toUpperCase() + role.name.slice(1)));
         setRoles(data);
       } catch (err) {
         console.error("Error al cargar roles:", err);
