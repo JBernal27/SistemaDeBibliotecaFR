@@ -1,8 +1,15 @@
-import { ApiResponse } from "../api";
-import { IUser } from "../interfaces/user.interface";
+import { IUser } from "../../common/interfaces/user.interface";
 
-export interface IGetUserByIdReq {
-  id: string;
+export type IGetUsersResp = Array<IUser>;
+
+export interface IUserCreate {
+  full_name: string;
+  email: string;
+  role_id: string;
 }
 
-export interface IGetUsersResp extends ApiResponse<IUser[]> {}
+export interface IUserUpdate {
+  full_name?: string;
+  email?: string;
+  role_id?: string;
+}
