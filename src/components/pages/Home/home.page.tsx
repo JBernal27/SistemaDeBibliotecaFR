@@ -11,6 +11,7 @@ import MaterialCard from "./components/bookCard.component";
 import { IMaterial } from "../../../common/interfaces/material.interface";
 import { MaterialsService } from "../../../services/materials/material.service";
 import FilterBar from "./components/filterBar.component";
+import MaterialView from "../../../common/components/material.view";
 
 const HomePage = () => {
   const [materials, setMaterials] = useState<IMaterial[]>([]);
@@ -25,6 +26,8 @@ const HomePage = () => {
     availability: null,
     query: null,
   });
+  const [viewOpen, setViewOpen] = useState<boolean>(false);
+  const [viewMaterial, setViewMaterial] = useState<IMaterial | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -131,7 +134,7 @@ const HomePage = () => {
                     timeout={1000}
                   >
                     <div>
-                      <MaterialCard material={material} />
+                      <MaterialCard setViewMaterial={setViewMaterial} setViewOpen={setViewOpen} material={material} />
                     </div>
                   </Zoom>
                 </Grid>
@@ -140,6 +143,11 @@ const HomePage = () => {
           </Grid>
         )}
       </Box>
+      <MaterialView
+        open={viewOpen}
+        onClose={() => setViewOpen(false)}
+        material={viewMaterial}
+      />
     </Container>
   );
 };

@@ -10,7 +10,6 @@ import{
   CircularProgress,
   Box,
   Typography,
-  Button,
 } from "@mui/material";
 import { IUser } from "../../../../common/interfaces/user.interface";
 import { useEffect, useState } from "react";
@@ -18,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 import { UsersService } from "../../../../services/users";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AlertModal from "../../../utilities/alert-modal.utility";
 import UserModal from "./components/user.modal";
 
@@ -109,7 +107,7 @@ export default function UsersTable() {
         <Box
           display="flex"
           justifyContent="space-between"
-          alignItems="center"
+          alignItems="end"
           mb={3}
           flexWrap="wrap"
         >
@@ -126,28 +124,13 @@ export default function UsersTable() {
           >
             Usuarios Registrados
           </Typography>
-
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              setModalUser(null);
-              setModalOpen(true);
-            }}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 1,
-              minWidth: { xs: "auto", sm: "150px" },
-              px: { xs: 1.5, sm: 3 },
-            }}
+          <Typography
+            variant="body2"
+            gutterBottom
+            color="error"
           >
-            <Typography variant="body1" color="inherit">
-              Agregar Usuario
-            </Typography>
-            <PersonAddIcon sx={{ fontSize: "25px" }} />
-          </Button>
+            Registra al usuario desde la autenticación antes de asignarle un rol.
+          </Typography>
         </Box>
         <Box>
           <TableContainer
